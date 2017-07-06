@@ -132,7 +132,7 @@ class TulingWXBot(WXBot):
 
     def schedule(self):
         current_time = time.localtime(time.time())
-        if((current_time.tm_hour == 13 and current_time.tm_min == 36)):
+        if((current_time.tm_hour == 23 and current_time.tm_min == 36)):
             self.send_img_msg_by_uid('img/girl/' + bytes(random.randint(1, 19)) + '.jpeg', self.get_user_id('六戒'))
             time.sleep(1)
 
