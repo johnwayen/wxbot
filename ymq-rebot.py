@@ -83,14 +83,13 @@ class TulingWXBot(WXBot):
         elif msg['msg_type_id'] == 4 and msg['content']['type'] == 0:  # text message from contact
             print 'msg:', msg
             if msg['user']['name'] in wx_contacts:
-               print 'name:', msg['user']['name']
+               print 'source:', msg['user']['name']
                self.send_msg_by_uid(self.tuling_auto_reply(msg['user']['id'], msg['content']['data']), msg['user']['id'])
             else:
-               print 'tip:', 'return'
                return;
         elif msg['msg_type_id'] == 3 and msg['content']['type'] == 0:  # group text message
             print 'msg:', msg
-            if  msg['user']['name'] != u'莞尔一笑' and msg['user']['name'] != u'一个简单正经的健身群' and msg['user']['name'] != u'机器人测试群':
+            if not msg['user']['name'] in wx_groups:
                 return;
             if 'detail' in msg['content']:
                 my_names = self.get_group_member_name(msg['user']['id'], self.my_account['UserName'])
@@ -112,7 +111,7 @@ class TulingWXBot(WXBot):
                     src_name = msg['content']['user']['name']
                     group_name = msg['user']['name']
                     reply = 'to ' + src_name + ': '
-                    if msg['user']['name'] == wx_groups:
+                    if msg['user']['name'] in wx_groups:
                         if msg['content']['type'] == 0:  # text message
 
                             if msg['content']['desc'].find("打卡") == -1:
