@@ -10,9 +10,12 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+#设置需要自动回复的微信联系人
+global wx_contacts
+wx_contacts = [u'六戒',u'Melin']
 #微信群设置
-global test_group_name
-test_group_name = u'机器人测试群'
+global wx_groups
+wx_groups = [u'同舟共舞',u'机器人测试群']
 
 
 class TulingWXBot(WXBot):
@@ -79,9 +82,12 @@ class TulingWXBot(WXBot):
             self.auto_switch(msg)
         elif msg['msg_type_id'] == 4 and msg['content']['type'] == 0:  # text message from contact
             print 'msg:', msg
-            if  msg['user']['name'] != u'六戒':
-                return;
-            self.send_msg_by_uid(self.tuling_auto_reply(msg['user']['id'], msg['content']['data']), msg['user']['id'])
+            if msg['user']['name'] in wx_contacts:
+               print 'name:', msg['user']['name']
+               self.send_msg_by_uid(self.tuling_auto_reply(msg['user']['id'], msg['content']['data']), msg['user']['id'])
+            else:
+               print 'tip:', 'return'
+               return;
         elif msg['msg_type_id'] == 3 and msg['content']['type'] == 0:  # group text message
             print 'msg:', msg
             if  msg['user']['name'] != u'莞尔一笑' and msg['user']['name'] != u'一个简单正经的健身群' and msg['user']['name'] != u'机器人测试群':
@@ -106,7 +112,7 @@ class TulingWXBot(WXBot):
                     src_name = msg['content']['user']['name']
                     group_name = msg['user']['name']
                     reply = 'to ' + src_name + ': '
-                    if msg['user']['name'] == test_group_name:
+                    if msg['user']['name'] == wx_groups:
                         if msg['content']['type'] == 0:  # text message
 
                             if msg['content']['desc'].find("打卡") == -1:
@@ -127,7 +133,7 @@ class TulingWXBot(WXBot):
                             reply += u"对不起，只认字，其他杂七杂八的我都不认识，,,Ծ‸Ծ,,"
                         self.send_msg_by_uid(reply, msg['user']['id'])
         elif msg['msg_type_id'] == 3 and msg['content']['type'] == 3:  # group img message
-            if msg['user']['name'] == test_group_name:
+            if msg['user']['name'] == wx_groups:
                 self.get_msg_img(msg['msg_id'])
 
 #定时任务
